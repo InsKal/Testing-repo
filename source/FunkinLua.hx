@@ -37,6 +37,7 @@ import Type.ValueType;
 import Controls;
 import DialogueBoxPsych;
 import Shaders;
+import vlc.MP4Sprite;
 
 #if desktop
 import Discord;
@@ -1420,6 +1421,18 @@ class FunkinLua {
 			if(image != null && image.length > 0)
 			{
 				leSprite.loadGraphic(Paths.image(image));
+			}
+			leSprite.antialiasing = ClientPrefs.globalAntialiasing;
+			PlayState.instance.modchartSprites.set(tag, leSprite);
+			leSprite.active = true;
+		});
+Lua_helper.add_callback(lua, "makeLuaMP4Sprite", function(tag:String, video:String, x:Float, y:Float) {
+			tag = tag.replace('.', '');
+			resetSpriteTag(tag);
+			var leSprite:MP4Sprite = new MP4Sprite(x, y);
+			if(image != null && image.length > 0)
+			{
+				leSprite.loadGraphic(Paths.image(video));
 			}
 			leSprite.antialiasing = ClientPrefs.globalAntialiasing;
 			PlayState.instance.modchartSprites.set(tag, leSprite);
