@@ -1426,10 +1426,10 @@ class FunkinLua {
 			PlayState.instance.modchartSprites.set(tag, leSprite);
 			leSprite.active = true;
 		});
-Lua_helper.add_callback(lua, "makeLuaMP4Sprite", function(tag:String, video:String, x:Float, y:Float) {
+Lua_helper.add_callback(lua, "makeLuaVideoSprite", function(tag:String, video:String, x:Float, y:Float) {
 			tag = tag.replace('.', '');
 			resetSpriteTag(tag);
-			var leSprite:MP4Sprite = new MP4Sprite(x, y);
+			var leSprite:VideoSprite = new VideoSprite(x, y);
 			if(video != null && video.length > 0)
 			{
 				leSprite.loadGraphic(Paths.image(video));
