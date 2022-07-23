@@ -1426,13 +1426,13 @@ class FunkinLua {
 			PlayState.instance.modchartSprites.set(tag, leSprite);
 			leSprite.active = true;
 		});
-Lua_helper.add_callback(lua, "makeLuaVideoSprite", function(tag:String, video:String, x:Float, y:Float) {
+        Lua_helper.add_callback(lua, "makeLuaVideoSprite", function(tag:String, video:String, x:Float, y:Float, ?loop:Bool = false) {
 			tag = tag.replace('.', '');
-			resetSpriteTag(tag);
-			var leSprite:VideoSprite = new VideoSprite(x, y);
+			resetVideoTag(tag);
+			var leSprite:ModchartMp4Sprites = new ModchartMp4Sprites(x, y);
 			if(video != null && video.length > 0)
 			{
-				leSprite.loadGraphic(Paths.image(video));
+				leSprite.playVideo(Paths.videos(video), loop);
 			}
 			leSprite.antialiasing = ClientPrefs.globalAntialiasing;
 			PlayState.instance.modchartSprites.set(tag, leSprite);
