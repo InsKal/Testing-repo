@@ -1415,7 +1415,7 @@ class FunkinLua {
 
 		Lua_helper.add_callback(lua, "makeLuaSprite", function(tag:String, image:String, x:Float, y:Float) {
 			tag = tag.replace('.', '');
-			resetSpriteTag(tag);
+			resetVideoSpriteTag(tag);
 			var leSprite:ModchartSprite = new ModchartSprite(x, y);
 			if(image != null && image.length > 0)
 			{
@@ -1554,6 +1554,37 @@ class FunkinLua {
 		Lua_helper.add_callback(lua, "addLuaSprite", function(tag:String, front:Bool = false) {
 			if(PlayState.instance.modchartSprites.exists(tag)) {
 				var shit:ModchartSprite = PlayState.instance.modchartSprites.get(tag);
+				if(!shit.wasAdded) {
+					if(front)
+					{
+						getInstance().add(shit);
+					}
+					else
+					{
+						if(PlayState.instance.isDead)
+						{
+							GameOverSubstate.instance.insert(GameOverSubstate.instance.members.indexOf(GameOverSubstate.instance.boyfriend), shit);
+						}
+						else
+						{
+							var position:Int = PlayState.instance.members.indexOf(PlayState.instance.gfGroup);
+							if(PlayState.instance.members.indexOf(PlayState.instance.boyfriendGroup) < position) {
+								position = PlayState.instance.members.indexOf(PlayState.instance.boyfriendGroup);
+							} else if(PlayState.instance.members.indexOf(PlayState.instance.dadGroup) < position) {
+								position = PlayState.instance.members.indexOf(PlayState.instance.dadGroup);
+							}
+							PlayState.instance.insert(position, shit);
+						}
+					}
+					shit.wasAdded = true;
+					//trace('added a thing: ' + tag);
+				}
+			}
+		});
+		
+		Lua_helper.add_callback(lua, "addLuaSpriteVideo", function(tag:String, front:Bool = false) {
+			if(PlayState.instance.modchartmp4Sprites.exists(tag)) {
+				var shit:ModchartMp4Sprites = PlayState.instance.modchartmp4Sprites.get(tag);
 				if(!shit.wasAdded) {
 					if(front)
 					{
@@ -2510,6 +2541,21 @@ class FunkinLua {
 		pee.destroy();
 		PlayState.instance.modchartSprites.remove(tag);
 	}
+	
+	function resetVideoSpriteTag(tag:String) {
+		if(!PlayState.instance.modchartmp4Sprites.exists(tag)) {
+			return;
+		}
+		
+		var pee:ModchartMp4Sprites = PlayState.instance.modchartmp4Sprites.get(tag);
+		pee.kill();
+		if(pee.wasAdded) {
+			PlayState.instance.remove(pee, true);
+		}
+		pee.destroy();
+		PlayState.instance.modchartmp4Sprites.remove(tag);
+	}
+	
 
 	function cancelTween(tag:String) {
 		if(PlayState.instance.modchartTweens.exists(tag)) {
@@ -2814,6 +2860,18 @@ class ModchartText extends FlxText
 		cameras = [PlayState.instance.camHUD];
 		scrollFactor.set();
 		borderSize = 2;
+	}
+}
+
+class ModchartMp4Sprites extends VideoSprite
+{
+	public var wasAdded:Bool = false;
+	//public var isInFront:Bool = false;
+
+	public function new(?x:Float = 0, ?y:Float = 0)
+	{
+		super(x, y);
+		antialiasing = ClientPrefs.globalAntialiasing;
 	}
 }
 
