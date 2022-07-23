@@ -38,7 +38,7 @@ import Controls;
 import DialogueBoxPsych;
 import Shaders;
 import VideoSprite;
-import vlc.MP4Handler
+import vlc.MP4Handler;
 #if desktop
 import Discord;
 #end
