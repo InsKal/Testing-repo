@@ -1432,7 +1432,7 @@ class FunkinLua {
 				leSprite.playVideo(Paths.video(video), loop);
 			}
 			leSprite.antialiasing = ClientPrefs.globalAntialiasing;
-			PlayState.instance.modchartSprites.set(tag, leSprite);
+			PlayState.instance.modchartmp4Sprites.set(tag, leSprite);(tag, leSprite);
 			leSprite.active = true;
 		});
 		Lua_helper.add_callback(lua, "makeAnimatedLuaSprite", function(tag:String, image:String, x:Float, y:Float, ?spriteType:String = "sparrow") {
