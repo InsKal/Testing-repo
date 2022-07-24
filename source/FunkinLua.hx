@@ -1414,7 +1414,6 @@ class FunkinLua {
 
 		Lua_helper.add_callback(lua, "makeLuaSprite", function(tag:String, image:String, x:Float, y:Float) {
 			tag = tag.replace('.', '');
-			resetVideoSpriteTag(tag);
 			var leSprite:ModchartSprite = new ModchartSprite(x, y);
 			if(image != null && image.length > 0)
 			{
@@ -1430,7 +1429,7 @@ class FunkinLua {
 			var leSprite:ModchartMp4Sprites = new ModchartMp4Sprites(x, y);
 			if(video != null && video.length > 0)
 			{
-				leSprite.playVideo(Paths.videos(video), loop);
+				leSprite.playVideo(Paths.video(video), loop);
 			}
 			leSprite.antialiasing = ClientPrefs.globalAntialiasing;
 			PlayState.instance.modchartSprites.set(tag, leSprite);
