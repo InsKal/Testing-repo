@@ -1631,26 +1631,33 @@ class FunkinLua {
 			}
 			luaTrace('Couldnt find object: ' + obj, false, false, FlxColor.RED);
 		});
-		Lua_helper.add_callback(lua, "scaleObject", function(obj:String, x:Float, y:Float, updateHitbox:Bool = true) {
-			if(PlayState.instance.getLuaObject(obj)!=null) {
-				var shit:FlxSprite = PlayState.instance.getLuaObject(obj);
+		Lua_helper.add_callback(lua, "scaleObject", function(obj:String, x:Float, y:Float) {
+			if(PlayState.instance.modchartSprites.exists(obj)) {
+				var shit:ModchartSprite = PlayState.instance.modchartSprites.get(obj);
 				shit.scale.set(x, y);
-				if(updateHitbox) shit.updateHitbox();
+				shit.updateHitbox();
+				return;
+			}
+			else if(PlayState.instance.modchartmp4Sprites.exists(obj)) {
+				var shit:ModchartMp4Sprites = PlayState.instance.modchartmp4Sprites.get(obj);
+				shit.scale.set(x, y);
+				shit.updateHitbox();
+				return;
+			}
+			else if(PlayState.instance.modchartBackdrops.exists(obj)) {
+				var shit:ModchartBackdrop = PlayState.instance.modchartBackdrops.get(obj);
+				shit.scale.set(x, y);
+				shit.updateHitbox();
 				return;
 			}
 
-			var killMe:Array<String> = obj.split('.');
-			var poop:FlxSprite = getObjectDirectly(killMe[0]);
-			if(killMe.length > 1) {
-				poop = getVarInArray(getPropertyLoopThingWhatever(killMe), killMe[killMe.length-1]);
-			}
-
+			var poop:FlxSprite = Reflect.getProperty(getInstance(), obj);
 			if(poop != null) {
 				poop.scale.set(x, y);
-				if(updateHitbox) poop.updateHitbox();
+				poop.updateHitbox();
 				return;
 			}
-			luaTrace('Couldnt find object: ' + obj, false, false, FlxColor.RED);
+			luaTrace('Couldnt find object: ' + obj);
 		});
 		Lua_helper.add_callback(lua, "updateHitbox", function(obj:String) {
 			if(PlayState.instance.getLuaObject(obj)!=null) {
@@ -1734,31 +1741,25 @@ class FunkinLua {
 		});
 
 		Lua_helper.add_callback(lua, "setObjectCamera", function(obj:String, camera:String = '') {
-			/*if(PlayState.instance.modchartSprites.exists(obj)) {
+			if(PlayState.instance.modchartSprites.exists(obj)) {
 				PlayState.instance.modchartSprites.get(obj).cameras = [cameraFromString(camera)];
 				return true;
 			}
 			else if(PlayState.instance.modchartTexts.exists(obj)) {
 				PlayState.instance.modchartTexts.get(obj).cameras = [cameraFromString(camera)];
 				return true;
-			}*/
-			var real = PlayState.instance.getLuaObject(obj);
-			if(real!=null){
-				real.cameras = [cameraFromString(camera)];
+			}
+			else if(PlayState.instance.modchartmp4Sprites.exists(obj)) {
+				PlayState.instance.modchartmp4Sprites.get(obj).cameras = [cameraFromString(camera)];
 				return true;
 			}
 
-			var killMe:Array<String> = obj.split('.');
-			var object:FlxSprite = getObjectDirectly(killMe[0]);
-			if(killMe.length > 1) {
-				object = getVarInArray(getPropertyLoopThingWhatever(killMe), killMe[killMe.length-1]);
-			}
-
+			var object:FlxObject = Reflect.getProperty(getInstance(), obj);
 			if(object != null) {
 				object.cameras = [cameraFromString(camera)];
 				return true;
 			}
-			luaTrace("Object " + obj + " doesn't exist!", false, false, FlxColor.RED);
+			luaTrace("Object " + obj + " doesn't exist!");
 			return false;
 		});
 		Lua_helper.add_callback(lua, "setBlendMode", function(obj:String, blend:String = '') {
