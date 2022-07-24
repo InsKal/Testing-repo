@@ -1425,7 +1425,7 @@ class FunkinLua {
 		});
         Lua_helper.add_callback(lua, "makeLuaVideoSprite", function(tag:String, video:String, x:Float, y:Float, ?loop:Bool = false) {
 			tag = tag.replace('.', '');
-			resetVideoTag(tag);
+			resetVideoSpriteTag(tag);
 			var leSprite:ModchartMp4Sprites = new ModchartMp4Sprites(x, y);
 			if(video != null && video.length > 0)
 			{
